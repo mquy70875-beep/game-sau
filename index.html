@@ -1,1 +1,51 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Sâu Ăn Táo Đơn Giản</title>
+    <style>
+        body { background-color: #222; color: #fff; text-align: center; font-family: sans-serif; }
+        canvas { background-color: #111; border: 4px solid #00fff0; display: block; margin: 20px auto; }
+        button { padding: 10px 20px; font-size: 18px; cursor: pointer; background: #00fff0; border: none; }
+    </style>
+</head>
+<body>
+    <h1>Sâu Ăn Táo</h1>
+    <h2>Điểm: <span id="score">0</span></h2>
+    <canvas id="game" width="400" height="400"></canvas>
+    <button id="btn" style="display:none;" onclick="S()">Chơi Lại</button>
+
+    <script>
+        const canvas = document.getElementById("game"), ctx = canvas.getContext("2d");
+        const scoreE = document.getElementById("score"), btn = document.getElementById("btn");
+        let s, d, a, score, loop;
+
+        function S() {
+            s = [{x: 200, y: 200}]; d = "R"; score = 0; scoreE.innerText = score; btn.style.display = "none";
+            T(); clearInterval(loop); loop = setInterval(U, 150);
+        }
+        function T() {
+            a = { x: Math.floor(Math.random() * 20) * 20, y: Math.floor(Math.random() * 20) * 20 };
+        }
+        window.addEventListener("keydown", e => {
+            if(e.keyCode==37 && d!="R") d="L"; if(e.keyCode==38 && d!="D") d="U";
+            if(e.keyCode==39 && d!="L") d="R"; if(e.keyCode==40 && d!="U") d="D";
+        });
+        function U() {
+            let hX = s[0].x, hY = s[0].y;
+            if(d=="L") hX-=20; if(d=="U") hY-=20; if(d=="R") hX+=20; if(d=="D") hY+=20;
+            if(hX<0 || hX>=400 || hY<0 || hY>=400 || s.some(p=>p.x==hX && p.y==hY)) {
+                clearInterval(loop); btn.style.display = "block"; alert("Thua rồi!"); return;
+            }
+            s.unshift({x: hX, y: hY});
+            if(hX==a.x && hY==a.y) { score++; scoreE.innerText = score; T(); } else { s.pop(); }
+            ctx.fillStyle = "#111"; ctx.fillRect(0,0,400,400);
+            ctx.fillStyle = "red"; ctx.fillRect(a.x, a.y, 20, 20);
+            ctx.fillStyle = "lime"; s.forEach(p => ctx.fillRect(p.x, p.y, 18, 18));
+        }
+        S();
+    </script>
+</body>
+</html>
 
