@@ -32,6 +32,48 @@
             if(e.keyCode==37 && d!="R") d="L"; if(e.keyCode==38 && d!="D") d="U";
             if(e.keyCode==39 && d!="L") d="R"; if(e.keyCode==40 && d!="U") d="D";
         });
+
+        // Hàm vẽ quả táo đẹp giống ảnh bằng Canvas vector
+        function drawApple(x, y, size) {
+            let r = size / 2;
+            let cx = x + r;
+            let cy = y + r;
+
+            // 1. Vẽ cuống táo (Màu nâu)
+            ctx.beginPath();
+            ctx.lineWidth = 3;
+            ctx.strokeStyle = "#5d4037";
+            ctx.quadraticCurveTo(cx, cy - r, cx + 4, cy - r - 6);
+            ctx.stroke();
+
+            // 2. Vẽ chiếc lá (Màu xanh lá có viền)
+            ctx.beginPath();
+            ctx.fillStyle = "#81c784";
+            ctx.strokeStyle = "#2e7d32";
+            ctx.lineWidth = 1;
+            ctx.ellipse(cx + 6, cy - r - 5, 6, 3, Math.PI / -4, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.stroke();
+
+            // 3. Vẽ thân quả táo tròn trịa (Màu đỏ có viền tối)
+            ctx.beginPath();
+            ctx.fillStyle = "#d32f2f"; // Màu đỏ thân táo
+            ctx.strokeStyle = "#5f0909"; // Viền tối xung quanh
+            ctx.lineWidth = 1.5;
+            
+            // Vẽ hình dáng quả táo lõm nhẹ ở đầu và đít
+            ctx.arc(cx - r/3, cy, r * 0.9, 0, 2 * Math.PI);
+            ctx.arc(cx + r/3, cy, r * 0.9, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.stroke();
+
+            // 4. Vẽ điểm bóng sáng (Vệt màu trắng hồng nhạt bên trái giúp táo căng mọng)
+            ctx.beginPath();
+            ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
+            ctx.arc(cx - r/2, cy - r/3, r/4, 0, 2 * Math.PI);
+            ctx.fill();
+        }
+
         function U() {
             let hX = s[0].x, hY = s[0].y;
             if(d=="L") hX-=20; if(d=="U") hY-=20; if(d=="R") hX+=20; if(d=="D") hY+=20;
@@ -40,12 +82,17 @@
             }
             s.unshift({x: hX, y: hY});
             if(hX==a.x && hY==a.y) { score++; scoreE.innerText = score; T(); } else { s.pop(); }
+            
+            // Xóa màn hình vẽ lại nền
             ctx.fillStyle = "#111"; ctx.fillRect(0,0,400,400);
-            ctx.fillStyle = "red"; ctx.fillRect(a.x, a.y, 20, 20);
+            
+            // Gọi hàm vẽ quả táo hoạt hình mới
+            drawApple(a.x, a.y, 20);
+            
+            // Vẽ con sâu màu xanh lá
             ctx.fillStyle = "lime"; s.forEach(p => ctx.fillRect(p.x, p.y, 18, 18));
         }
         S();
     </script>
 </body>
 </html>
-
